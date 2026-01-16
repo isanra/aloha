@@ -29,12 +29,12 @@
         </span>
     </button>
 
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 max-w-7xl overflow-x-hidden">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-10 max-w-7xl overflow-x-hidden">
         
         <header class="text-center mb-8 pt-2 relative">
             <div class="inline-block relative group cursor-pointer transform transition hover:scale-105 duration-300">
                 <i class="ph-fill ph-sun text-4xl sm:text-6xl text-yellow-400 absolute -top-4 -right-4 sm:-top-8 sm:-right-12 animate-spin-slow z-0"></i>
-                <img src="/img/logo.png" alt="Aloha Wi Logo" class="h-24 sm:h-32 md:h-40 lg:h-56 w-auto mx-auto object-contain relative z-10 drop-shadow-sm filter hover:brightness-110 transition">
+                <img src="/img/logo.png" alt="Aloha Wi Logo" class="h-24 sm:h-42 md:h-48 lg:h-56 w-auto mx-auto object-contain relative z-10 drop-shadow-sm filter hover:brightness-110 transition">
                 <p class="font-display text-electricOrange text-sm sm:text-lg md:text-xl tracking-[0.2em] mt-2 uppercase font-bold">Summer Dream's</p>
             </div>
         </header>
@@ -289,11 +289,11 @@
                 activeCategory: 'All',
                 cart: [],
                 items: [
-                    { id: 1, name: 'Crazy Rich Rice Bowl', price: 35000, image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500&q=80' },
-                    { id: 2, name: 'Summer Tuna Salad', price: 28000, image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&q=80' },
-                    { id: 3, name: 'Ultimate Beef Ramen', price: 42000, image: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=500&q=80' },
-                    { id: 4, name: 'Mega Steak & Fries', price: 85000, image: 'https://images.unsplash.com/photo-1600891964092-4316c288032e?w=500&q=80' },
-                    { id: 5, name: 'Fresh Mango Juice', price: 18000, image: 'https://images.unsplash.com/photo-1546173159-315724a31696?w=500&q=80' },
+                    { id: 1, name: 'Berry Manuka', price: 27000, image: '/img/manuka.png' },
+                    { id: 2, name: 'Choco Lava Bun', price: 21000, image: '/img/bun.png' },
+                    { id: 3, name: 'Sparkling Lychee Tea', price: 23000, image: '/img/lychee.png' },
+                    { id: 4, name: 'Magic Water', price: 16000, image: '/img/magic.png' },
+                    { id: 5, name: 'Fruiti Punch', price: 28000, image: '/img/fruiti.png' },
                     { id: 6, name: 'Choco Lava Cake', price: 22000, image: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476d?w=500&q=80' }
                 ],
                 
