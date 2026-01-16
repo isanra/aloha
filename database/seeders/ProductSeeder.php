@@ -26,7 +26,7 @@ class ProductSeeder extends Seeder
             [
                 'name' => 'Berry Manuka', 
                 'price' => 27000, 
-                'image' => '/img/manuka.png', // Pastikan gambar ada
+                'image' => '/img/manuka2.png', // Pastikan gambar ada
                 'category' => 'Drinks'
             ],
             [
