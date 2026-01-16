@@ -43,8 +43,9 @@
 
         <div class="relative -mx-4 px-4 sm:mx-0 sm:px-0 mb-6 group">
             <div class="flex sm:justify-center gap-3 overflow-x-auto no-scrollbar pb-4 snap-x">
-                <template x-for="cat in ['All', 'Rice', 'Noodles', 'Drinks', 'Dessert', 'Snacks']">
+                <template x-for="cat in ['All', 'Main Course', 'Drinks', 'Bread', 'Fruiti']">
                     <button class="snap-start shrink-0 px-5 py-2.5 rounded-full font-display font-bold border-2 transition-all duration-200 text-sm sm:text-base whitespace-nowrap"
+                        @click="activeCategory = cat" 
                         :class="activeCategory === cat ? 'bg-electricBlue border-electricBlue text-white shadow-fun-blue translate-y-[-2px]' : 'bg-white border-slate-100 text-slate-400 hover:border-electricBlue hover:text-electricBlue'">
                         <span x-text="cat"></span>
                     </button>
@@ -438,8 +439,8 @@
 
                 sendToWhatsapp() {
                     let text = `*ALOHA! NEW ORDER* 🌴%0A%0A`;
-                    text += `👤 *Nama:* ${this.customerName}%0A`;
-                    text += `📝 *Notes:* ${this.customerNotes || '-' }%0A%0A`;
+                    text += `*Nama:* ${this.customerName}%0A`;
+                    text += `*Notes:* ${this.customerNotes || '-' }%0A%0A`;
                     text += `*----- DAFTAR PESANAN -----*%0A`;
                     
                     this.cart.forEach((item, i) => {
@@ -447,9 +448,9 @@
                     });
                     
                     text += `%0A-----------------------------%0A`;
-                    text += `💰 *TOTAL: ${this.formatRupiah(this.totalPrice)}*`;
+                    text += `*TOTAL: ${this.formatRupiah(this.totalPrice)}*`;
 
-                    let waNumber = "6281234567890"; 
+                    let waNumber = "6285171512508"; 
                     window.open(`https://wa.me/${waNumber}?text=${text}`, '_blank');
                 }
             }));
