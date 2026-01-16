@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Aloha! - Order</title>
     <link rel="icon" type="image/png" sizes="32x32" href="/img/logo.png">
 
@@ -19,7 +20,8 @@
         * { -webkit-tap-highlight-color: transparent; }
     </style>
 </head>
-<body class="bg-white text-slate-800 font-sans antialiased pb-32 selection:bg-electricOrange selection:text-white" x-data="foodOrder()">
+<body class="bg-white text-slate-800 font-sans antialiased pb-32 selection:bg-electricOrange selection:text-white" 
+      x-data="foodOrder({{ Js::from($products) }}, {{ Js::from($queues) }})">
 
     <button @click="isQueueModalOpen = true" class="fixed top-4 right-4 z-30 bg-white p-3 rounded-full shadow-lg border border-slate-100 text-electricBlue hover:bg-electricBlue hover:text-white transition active:scale-90 group">
         <i class="ph-bold ph-list-numbers text-2xl group-hover:rotate-12 transition"></i>
@@ -53,17 +55,22 @@
 
         <div class="grid grid-cols-1 min-[500px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
             <template x-for="item in items" :key="item.id">
-                <div class="group bg-white border-2 border-slate-100 rounded-[2rem] p-4 flex flex-row sm:flex-col items-center gap-4 sm:gap-0 hover:border-electricBlue transition-all duration-300 hover:shadow-xl relative overflow-hidden h-full">
+                <div x-show="activeCategory === 'All' || item.category === activeCategory" 
+                     class="group bg-white border-2 border-slate-100 rounded-[2rem] p-4 flex flex-row sm:flex-col items-center gap-4 sm:gap-0 hover:border-electricBlue transition-all duration-300 hover:shadow-xl relative overflow-hidden h-full">
+                    
                     <div class="shrink-0 w-24 h-24 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-2xl sm:rounded-full overflow-hidden border-2 sm:border-4 border-slate-50 shadow-inner sm:mb-4 sm:mt-2 group-hover:scale-105 transition-transform duration-500">
                         <img :src="item.image" class="w-full h-full object-cover">
                     </div>
+
                     <div class="flex-grow sm:text-center w-full flex flex-col justify-between sm:h-full">
                         <div>
                             <h3 class="font-display font-bold text-lg sm:text-xl text-slate-800 leading-tight mb-1" x-text="item.name"></h3>
                             <p class="text-xs sm:text-sm text-slate-400 mb-2 sm:mb-4 line-clamp-2">Deskripsi menu yang lezat & bergizi.</p>
                         </div>
+                        
                         <div class="flex sm:block items-center justify-between sm:mt-auto w-full">
                             <p class="font-display font-bold text-lg sm:text-2xl text-electricBlue sm:mb-3" x-text="formatRupiah(item.price)"></p>
+                            
                             <button @click="openQtyModal(item)" class="bg-white border-2 border-electricOrange text-electricOrange font-display font-bold py-2 px-4 sm:py-3 sm:w-full rounded-xl sm:rounded-2xl hover:bg-electricOrange hover:text-white transition-all active:scale-95 shadow-fun-orange flex items-center gap-1">
                                 <span class="hidden sm:inline">ADD</span> <i class="ph-bold ph-plus text-lg"></i>
                             </button>
@@ -127,12 +134,15 @@
              x-transition:enter="transition ease-out duration-300"
              x-transition:enter-start="translate-y-full sm:translate-y-10 opacity-0"
              x-transition:enter-end="translate-y-0 opacity-100"
-             class="bg-white w-full sm:max-w-md h-[85vh] sm:h-auto rounded-t-[2.5rem] sm:rounded-[2.5rem] p-6 sm:p-8 shadow-2xl overflow-hidden relative z-10 flex flex-col">
+             class="bg-white w-full sm:max-w-md h-[85vh] sm:h-fit sm:max-h-[85vh] rounded-t-[2.5rem] sm:rounded-[2.5rem] p-6 sm:p-8 shadow-2xl overflow-hidden relative z-10 flex flex-col">
+             
              <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-6 sm:hidden shrink-0"></div>
+            
             <div class="flex justify-between items-center mb-6 shrink-0">
                 <h2 class="font-display font-bold text-2xl text-slate-900">Keranjang Kamu 🛒</h2>
                 <button @click="isCartModalOpen = false" class="text-slate-400 hover:text-red-500 bg-slate-50 p-2 rounded-full"><i class="ph-bold ph-x text-xl"></i></button>
             </div>
+            
             <div class="flex-grow overflow-y-auto pr-1 space-y-4">
                 <template x-for="(item, index) in cart" :key="index">
                     <div class="flex gap-4 items-center bg-white border border-slate-100 rounded-2xl p-3 shadow-sm">
@@ -160,6 +170,7 @@
                     <p class="text-slate-400 font-medium">Keranjang masih kosong nih!</p>
                 </div>
             </div>
+            
             <div class="mt-6 pt-4 border-t border-slate-100 shrink-0">
                 <div class="flex justify-between items-center mb-4">
                     <span class="font-bold text-slate-500">Total</span>
@@ -179,12 +190,21 @@
              x-transition:enter-start="translate-y-full sm:translate-y-10 opacity-0"
              x-transition:enter-end="translate-y-0 opacity-100"
              class="bg-white w-full sm:max-w-md h-[90vh] sm:h-auto rounded-t-[2.5rem] sm:rounded-[2.5rem] p-6 sm:p-8 shadow-2xl overflow-y-auto relative z-10 flex flex-col">
+             
              <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-6 sm:hidden shrink-0"></div>
+            
             <div class="flex justify-between items-center mb-6 shrink-0">
                 <h2 class="font-display font-bold text-2xl text-slate-900">Data Pemesan 📝</h2>
                 <button @click="isFormModalOpen = false" class="text-slate-400 hover:text-red-500 bg-slate-50 p-2 rounded-full"><i class="ph-bold ph-arrow-left text-xl"></i></button>
             </div>
+            
             <div class="flex-grow overflow-y-auto pr-1">
+                
+                <div class="bg-blue-50 p-4 rounded-2xl border border-blue-100 mb-6 flex justify-between items-center">
+                    <span class="text-blue-800 font-medium text-sm">Total Tagihan</span>
+                    <span class="font-display font-bold text-xl text-electricBlue" x-text="formatRupiah(totalPrice)"></span>
+                </div>
+
                 <div class="space-y-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-400 uppercase mb-2 ml-1">Nama Kamu</label>
@@ -196,6 +216,7 @@
                     </div>
                 </div>
             </div>
+            
             <div class="mt-6 pt-4 border-t border-slate-100 shrink-0">
                 <button @click="processOrder()" class="w-full bg-[#25D366] text-white font-display font-bold py-4 rounded-2xl shadow-[0_6px_0_0_#1DA851] active:translate-y-1 active:shadow-none hover:bg-[#22bf5b] transition-all flex items-center justify-center gap-3 text-lg">
                     <i class="ph-bold ph-whatsapp-logo text-2xl"></i>
@@ -224,7 +245,12 @@
             </div>
 
             <div x-show="!selectedQueueItem" class="flex-grow overflow-y-auto pr-1 space-y-3" x-transition:enter="transition ease-out duration-200">
-                <p class="text-sm text-slate-400 mb-2">Klik nama untuk lihat detail pesanan.</p>
+                
+                <div x-show="queueList.length === 0" class="text-center py-10 text-slate-400">
+                    <p>Belum ada antrian hari ini.</p>
+                </div>
+
+                <p x-show="queueList.length > 0" class="text-sm text-slate-400 mb-2">Klik nama untuk lihat detail pesanan.</p>
                 
                 <template x-for="q in queueList" :key="q.id">
                     <div @click="selectedQueueItem = q" class="bg-white border-2 border-slate-50 rounded-2xl p-4 flex items-center justify-between hover:border-electricBlue cursor-pointer transition shadow-sm group">
@@ -285,46 +311,23 @@
 
     <script>
         document.addEventListener('alpine:init', () => {
-            Alpine.data('foodOrder', () => ({
+            // TERIMA DATA DARI LARAVEL (products_db & queues_db)
+            Alpine.data('foodOrder', (products_db, queues_db) => ({
                 activeCategory: 'All',
                 cart: [],
-                items: [
-                    { id: 1, name: 'Berry Manuka', price: 27000, image: '/img/manuka.png' },
-                    { id: 2, name: 'Choco Lava Bun', price: 21000, image: '/img/bun.png' },
-                    { id: 3, name: 'Sparkling Lychee Tea', price: 23000, image: '/img/lychee.png' },
-                    { id: 4, name: 'Magic Water', price: 16000, image: '/img/magic.png' },
-                    { id: 5, name: 'Fruiti Punch', price: 28000, image: '/img/fruiti.png' },
-                    { id: 6, name: 'Choco Lava Cake', price: 22000, image: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476d?w=500&q=80' }
-                ],
                 
-                // DATA DUMMY ANTRIAN (Nanti diganti pake database)
-                queueList: [
-                    { 
-                        id: 101, name: 'Kak Rina', time: '10:05', status: 'Selesai', total: 53000, 
-                        items: [{name: 'Crazy Rich Rice Bowl', qty: 1}, {name: 'Fresh Mango Juice', qty: 1}] 
-                    },
-                    { 
-                        id: 102, name: 'Bang Jago', time: '10:12', status: 'Dimasak', total: 85000, 
-                        items: [{name: 'Mega Steak & Fries', qty: 1}] 
-                    },
-                    { 
-                        id: 103, name: 'Sisil', time: '10:15', status: 'Menunggu', total: 22000, 
-                        items: [{name: 'Choco Lava Cake', qty: 1}] 
-                    },
-                    { 
-                        id: 104, name: 'Pak Budi', time: '10:20', status: 'Menunggu', total: 70000, 
-                        items: [{name: 'Crazy Rich Rice Bowl', qty: 2}] 
-                    },
-                ],
+                // MENGGUNAKAN DATA DARI DATABASE
+                items: products_db,
+                queueList: queues_db,
 
                 // Modal States
                 isQtyModalOpen: false,
                 isCartModalOpen: false,
                 isFormModalOpen: false,
-                isQueueModalOpen: false, // State Modal Antrian
+                isQueueModalOpen: false,
                 
                 selectedItem: null,
-                selectedQueueItem: null, // State Detail Antrian
+                selectedQueueItem: null,
                 tempQty: 1,
                 customerName: '',
                 customerNotes: '',
@@ -393,12 +396,47 @@
                     }, 200);
                 },
 
-                processOrder() {
+                // FUNGSI UTAMA: SAVE KE DB & KIRIM KE WA
+                async processOrder() {
                     if(!this.customerName) {
                         alert('Eits, namanya diisi dulu dong kakak! 😄');
                         return;
                     }
 
+                    // 1. Kirim Data ke Laravel
+                    try {
+                        const response = await fetch('/order', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            },
+                            body: JSON.stringify({
+                                customer_name: this.customerName,
+                                customer_notes: this.customerNotes,
+                                cart: this.cart
+                            })
+                        });
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                            // 2. Jika Sukses Simpan, Buka WA
+                            this.sendToWhatsapp();
+                            
+                            // 3. Reload Halaman agar Antrian Tampil
+                            window.location.reload(); 
+                        } else {
+                            alert('Gagal membuat pesanan. Coba lagi ya!');
+                        }
+
+                    } catch (error) {
+                        console.error(error);
+                        alert('Terjadi kesalahan sistem.');
+                    }
+                },
+
+                sendToWhatsapp() {
                     let text = `*ALOHA! NEW ORDER* 🌴%0A%0A`;
                     text += `👤 *Nama:* ${this.customerName}%0A`;
                     text += `📝 *Notes:* ${this.customerNotes || '-' }%0A%0A`;
