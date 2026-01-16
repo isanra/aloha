@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - Aloha</title>
+    <title>Aloha - Admin login</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/logo.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>body { font-family: 'Poppins', sans-serif; }</style>
