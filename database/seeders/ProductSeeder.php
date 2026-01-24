@@ -13,50 +13,50 @@ class ProductSeeder extends Seeder
         Product::truncate(); 
 
         $items = [
-            // Kategori: Main Course
-            [
-                'name' => 'Japlak', 
-                'price' => 27000, 
-                'image' => '/img/japlak.png', 
-                'category' => 'Main Course'
-            ],
+           
             
 
             // Kategori: Drinks
             [
                 'name' => 'Berry Manuka', 
-                'price' => 27000, 
+                'price' => 31000, 
                 'image' => '/img/manuka2.png', // Pastikan gambar ada
-                'category' => 'Drinks'
+                'category' => 'Drinks',
+                'stock' => 20
+
             ],
             [
-                'name' => 'Sparkling Lychee Tea', 
-                'price' => 23000, 
-                'image' => '/img/lychee.png', 
-                'category' => 'Drinks'
+                'name' => 'Passion Tea', 
+                'price' => 27000, 
+                'image' => '/img/passion.png', 
+                'category' => 'Drinks',
+                'stock' => 30
             ],
             [
-                'name' => 'Magic Water', 
-                'price' => 16000, 
-                'image' => '/img/magic.png', 
-                'category' => 'Drinks'
+                'name' => 'Batavian Latte', 
+                'price' => 25000, 
+                'image' => '/img/batavian.png', 
+                'category' => 'Drinks',
+                'stock' => 35
             ],
 
             // Kategori: Bread
             [
-                'name' => 'Choco Lava Bun', 
-                'price' => 21000, 
+                'name' => 'Steamed Bun', 
+                'price' => 25000, 
                 'image' => '/img/bun.png', 
-                'category' => 'Bread'
+                'category' => 'Bread',
+                'stock' => 3
             ],
             
 
             // Kategori: Fruiti
             [
-                'name' => 'Fruiti Punch Bowl', 
-                'price' => 28000, 
+                'name' => 'Fruiti Punch ', 
+                'price' => 34000, 
                 'image' => '/img/fruiti.png', 
-                'category' => 'Fruiti'
+                'category' => 'Fruiti',
+                'stock' => 3
             ],
             
         ];

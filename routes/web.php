@@ -21,6 +21,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard']);
     Route::post('/update/{id}', [AdminController::class, 'updateStatus']);
     Route::get('/logout', [AdminController::class, 'logout']);
+    Route::post('/stock/{id}', [AdminController::class, 'updateStock']);
 });
 
 require __DIR__.'/auth.php';

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Aloha! - Order</title>
+    <title>Cordova - Order</title>
     <link rel="icon" type="image/png" sizes="32x32" href="/img/logo.png">
 
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -37,7 +37,7 @@
             <div class="inline-block relative group cursor-pointer transform transition hover:scale-105 duration-300">
                 <i class="ph-fill ph-sun text-4xl sm:text-6xl text-yellow-400 absolute -top-4 -right-4 sm:-top-8 sm:-right-12 animate-spin-slow z-0"></i>
                 <img src="/img/logo.png" alt="Aloha Wi Logo" class="h-24 sm:h-42 md:h-48 lg:h-56 w-auto mx-auto object-contain relative z-10 drop-shadow-sm filter hover:brightness-110 transition">
-                <p class="font-display text-electricOrange text-sm sm:text-lg md:text-xl tracking-[0.2em] mt-2 uppercase font-bold">Summer Dream's</p>
+                <p class="font-display text-electricOrange text-sm sm:text-lg md:text-xl tracking-[0.2em] mt-2 uppercase font-bold">By: Cordova.</p>
             </div>
         </header>
 
@@ -59,7 +59,12 @@
                 <div x-show="activeCategory === 'All' || item.category === activeCategory" 
                      class="group bg-white border-2 border-slate-100 rounded-[2rem] p-4 flex flex-row sm:flex-col items-center gap-4 sm:gap-0 hover:border-electricBlue transition-all duration-300 hover:shadow-xl relative overflow-hidden h-full">
                     
-                    <div class="shrink-0 w-24 h-24 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-2xl sm:rounded-full overflow-hidden border-2 sm:border-4 border-slate-50 shadow-inner sm:mb-4 sm:mt-2 group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute top-3 right-3 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold border border-slate-100 shadow-sm z-20"
+                         :class="item.stock < 5 ? 'text-red-500 bg-red-50 border-red-100' : 'text-slate-500'">
+                        Stok: <span x-text="item.stock"></span>
+                    </div>
+
+                    <div class="shrink-0 w-24 h-24 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-2xl sm:rounded-full overflow-hidden border-2 sm:border-4 border-slate-50 shadow-inner sm:mb-4 sm:mt-2 group-hover:scale-105 transition-transform duration-500 relative">
                         <img :src="item.image" class="w-full h-full object-cover">
                     </div>
 
@@ -72,9 +77,17 @@
                         <div class="flex sm:block items-center justify-between sm:mt-auto w-full">
                             <p class="font-display font-bold text-lg sm:text-2xl text-electricBlue sm:mb-3" x-text="formatRupiah(item.price)"></p>
                             
-                            <button @click="openQtyModal(item)" class="bg-white border-2 border-electricOrange text-electricOrange font-display font-bold py-2 px-4 sm:py-3 sm:w-full rounded-xl sm:rounded-2xl hover:bg-electricOrange hover:text-white transition-all active:scale-95 shadow-fun-orange flex items-center gap-1">
-                                <span class="hidden sm:inline">ADD</span> <i class="ph-bold ph-plus text-lg"></i>
-                            </button>
+                            <template x-if="item.stock > 0">
+                                <button @click="openQtyModal(item)" class="bg-white border-2 border-electricOrange text-electricOrange font-display font-bold py-2 px-4 sm:py-3 sm:w-full rounded-xl sm:rounded-2xl hover:bg-electricOrange hover:text-white transition-all active:scale-95 shadow-fun-orange flex items-center gap-1">
+                                    <span class="hidden sm:inline">ADD</span> <i class="ph-bold ph-plus text-lg"></i>
+                                </button>
+                            </template>
+
+                            <template x-if="item.stock <= 0">
+                                <button disabled class="bg-slate-100 border-2 border-slate-200 text-slate-400 font-display font-bold py-2 px-4 sm:py-3 sm:w-full rounded-xl sm:rounded-2xl cursor-not-allowed flex items-center justify-center gap-1">
+                                    <span class="hidden sm:inline">HABIS</span> <i class="ph-bold ph-prohibit text-lg"></i>
+                                </button>
+                            </template>
                         </div>
                     </div>
                 </div>
@@ -312,16 +325,12 @@
 
     <script>
         document.addEventListener('alpine:init', () => {
-            // TERIMA DATA DARI LARAVEL (products_db & queues_db)
             Alpine.data('foodOrder', (products_db, queues_db) => ({
                 activeCategory: 'All',
                 cart: [],
-                
-                // MENGGUNAKAN DATA DARI DATABASE
                 items: products_db,
                 queueList: queues_db,
 
-                // Modal States
                 isQtyModalOpen: false,
                 isCartModalOpen: false,
                 isFormModalOpen: false,
@@ -340,7 +349,6 @@
                     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(val || 0);
                 },
 
-                // ADD ITEM FLOW
                 openQtyModal(item) {
                     this.selectedItem = item;
                     this.tempQty = 1;
@@ -362,7 +370,6 @@
                     this.closeQtyModal();
                 },
 
-                // MANAGE CART FLOW
                 openCartModal() {
                     this.isCartModalOpen = true;
                 },
@@ -389,7 +396,6 @@
                     }
                 },
 
-                // CHECKOUT FLOW
                 openCheckoutForm() {
                     this.isCartModalOpen = false;
                     setTimeout(() => {
@@ -397,14 +403,12 @@
                     }, 200);
                 },
 
-                // FUNGSI UTAMA: SAVE KE DB & KIRIM KE WA
                 async processOrder() {
                     if(!this.customerName) {
                         alert('Eits, namanya diisi dulu dong kakak! 😄');
                         return;
                     }
 
-                    // 1. Kirim Data ke Laravel
                     try {
                         const response = await fetch('/order', {
                             method: 'POST',
@@ -422,10 +426,7 @@
                         const result = await response.json();
 
                         if (result.success) {
-                            // 2. Jika Sukses Simpan, Buka WA
                             this.sendToWhatsapp();
-                            
-                            // 3. Reload Halaman agar Antrian Tampil
                             window.location.reload(); 
                         } else {
                             alert('Gagal membuat pesanan. Coba lagi ya!');
@@ -438,7 +439,7 @@
                 },
 
                 sendToWhatsapp() {
-                    let text = `*ALOHA! NEW ORDER* 🌴%0A%0A`;
+                    let text = `*Cordova! NEW ORDER* 🌴%0A%0A`;
                     text += `*Nama:* ${this.customerName}%0A`;
                     text += `*Notes:* ${this.customerNotes || '-' }%0A%0A`;
                     text += `*----- DAFTAR PESANAN -----*%0A`;
